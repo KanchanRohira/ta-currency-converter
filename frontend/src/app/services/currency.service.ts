@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CurrencyService {
-  private apiUrl = 'https://ta-currency-converter-mzdc.vercel.app/currency';
+  private apiUrl = 'https://ta-currency-converter.vercel.app/currency';
 
   constructor(private http: HttpClient) {}
 
