@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "cd frontend && npm install --legacy-peer-deps && npx ng build",
+  "buildCommand": "cd frontend && npm install && ./node_modules/.bin/ng build",
   "outputDirectory": "frontend/dist/frontend/browser",
-  "installCommand": "cd frontend && npm install --legacy-peer-deps",
+  "installCommand": "cd frontend && npm install",
   "builds": [
     {
       "src": "frontend/dist/frontend/browser/**",
