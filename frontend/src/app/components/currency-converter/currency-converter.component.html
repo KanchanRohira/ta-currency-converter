@@ -1,0 +1,142 @@
+<div class="app-container">
+  <div class="converter-wrapper">
+    <div class="brand-header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2V4M12 20V22M4 12H2M6.5 6.5L5 5M17.5 6.5L19 5M6.5 17.5L5 19M17.5 17.5L19 19M22 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>Currency Converter</h1>
+        <p>Real-time exchange rates</p>
+      </div>
+    </div>
+
+    <mat-card class="converter-card">
+      <div class="input-group">
+        <label class="input-label">Amount</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput 
+                 type="number" 
+                 [(ngModel)]="amount" 
+                 placeholder="Enter amount"
+                 (keyup.enter)="convert()">
+          <mat-icon matSuffix>attach_money</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="exchange-row">
+        <div class="currency-box">
+          <label class="input-label">From</label>
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="base">
+              <mat-option *ngFor="let c of currencies" [value]="c">
+                <span class="currency-option">{{c}}</span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="swap-button">
+          <button mat-fab color="primary" (click)="swap()" class="swap-fab">
+            <mat-icon>swap_horiz</mat-icon>
+          </button>
+        </div>
+
+        <div class="currency-box">
+          <label class="input-label">To</label>
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="target">
+              <mat-option *ngFor="let c of currencies" [value]="c">
+                <span class="currency-option">{{c}}</span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="historical-toggle">
+        <mat-slide-toggle [(ngModel)]="useHistorical" color="primary">
+          Historical Exchange Rate
+        </mat-slide-toggle>
+      </div>
+
+      <div *ngIf="useHistorical" class="date-picker-wrapper">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Date</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button 
+              color="primary" 
+              class="convert-button"
+              (click)="convert()"
+              [disabled]="isLoading || !amount">
+        <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
+        <span *ngIf="!isLoading">Convert Now</span>
+        <mat-icon *ngIf="!isLoading" class="button-icon">trending_up</mat-icon>
+      </button>
+
+      <div *ngIf="result !== null && !isLoading" class="result-card">
+        <div class="result-label">Converted Amount</div>
+        <div class="result-value">
+          <span class="amount">{{amount}}</span>
+          <span class="currency">{{base}}</span>
+          <span class="equals">=</span>
+          <span class="amount">{{result}}</span>
+          <span class="currency">{{target}}</span>
+        </div>
+        <div class="exchange-rate" *ngIf="result !== null && amount !== null">
+          <mat-icon>info_outline</mat-icon>
+          1 {{base}} = {{(result / amount).toFixed(4)}} {{target}}
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card *ngIf="history.length > 0" class="history-card">
+      <div class="history-header">
+        <div class="history-title">
+          <mat-icon>history</mat-icon>
+          <h3>Conversion History</h3>
+        </div>
+        <button mat-button color="warn" (click)="clearHistory()" class="clear-btn">
+          <mat-icon>delete_outline</mat-icon>
+          Clear All
+        </button>
+      </div>
+
+      <div class="history-list">
+        <div *ngFor="let h of history; let i = index" class="history-item">
+          <div class="history-badge">{{history.length - i}}</div>
+          <div class="history-details">
+            <div class="conversion-detail">
+              <span class="from-amount">{{h.amount}} {{h.from}}</span>
+              <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+              <span class="to-amount">{{h.result}} {{h.to}}</span>
+            </div>
+            <div class="meta-info">
+              <span class="rate-info">Rate: 1 {{h.from}} = {{h.rate.toFixed(4)}} {{h.to}}</span>
+              <span class="date-info">
+                <mat-icon>schedule</mat-icon>
+                {{h.timestamp | date:'medium'}}
+              </span>
+              <span *ngIf="h.date" class="historical-badge">
+                <mat-icon>event</mat-icon>
+                {{h.date}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <div *ngIf="history.length === 0" class="empty-state">
+      <mat-icon>history</mat-icon>
+      <h3>No conversion history</h3>
+      <p>Your recent conversions will appear here</p>
+    </div>
+  </div>
+</div>
