@@ -1,15 +1,20 @@
 {
   "version": 2,
-  "buildCommand": "cd frontend && npm install && ./node_modules/.bin/ng build",
-  "outputDirectory": "frontend/dist/frontend/browser",
-  "installCommand": "cd frontend && npm install",
   "builds": [
     {
       "src": "frontend/dist/frontend/browser/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "backend/dist/main.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/backend/dist/main.js"
+    },
     {
       "src": "/(.*)",
       "dest": "/frontend/dist/frontend/browser/index.html"
