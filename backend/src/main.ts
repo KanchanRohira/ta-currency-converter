@@ -11,7 +11,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:4200',
       'http://localhost:3001',
-      'https://your-netlify-app.netlify.app'
+      'https://currency-converter-ta-solution.netlify.app'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
